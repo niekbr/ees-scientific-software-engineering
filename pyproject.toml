@@ -7,6 +7,7 @@ name = "ees-scientific-software-engineering"
 authors = [
   {name = "Thomas Swarts",email = "l.j.r.m.m.t.swarts@tue.nl"},
   {name = "Ballard Asare-Bediako", email = "b.asarebediako@tue.nl"}
+  {name = "Niek Brekelmans", email = "n.brekelmans@tue.nl"}
 ]
 description = "Training project for scientific software engineering"
 readme = "README.md"
