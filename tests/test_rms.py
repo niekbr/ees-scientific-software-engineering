@@ -38,3 +38,8 @@ def test_rms_error_multi_dimensional():
 def test_rms_error_contains_inf():
     with pytest.raises(ValueError, match="Argument array should not contain inf!"):
         rms(np.array([4.0, np.inf, 8.0]))
+
+
+def test_rms_error_contains_minus_inf():
+    with pytest.raises(ValueError, match="Argument array should not contain inf!"):
+        rms(np.array([4.0, -np.inf, 8.0]))
