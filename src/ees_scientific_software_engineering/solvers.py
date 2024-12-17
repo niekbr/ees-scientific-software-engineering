@@ -1,8 +1,12 @@
+"""Module to solve Ax=b"""
+
 import numpy as np
 import scipy
 
 
 class LUSolver:
+    """Class to solve Ax=b using matrix factorization"""
+
     def __init__(self, input_matrix: np.ndarray):
         """
         Constructor of the class. It takes the input matrix and decompose it into LU factorization.
@@ -18,3 +22,7 @@ class LUSolver:
         Solve the linear equation with the input matrix and the given vector b.
         """
         return scipy.linalg.lu_solve((self._lu, self._piv), b)
+
+    # def x(self):
+    #     """Fixes min of 2 methods"""
+    #     return 'x'

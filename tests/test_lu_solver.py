@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from ees_scientific_software_engineering.LUSolver import LUSolver
+from ees_scientific_software_engineering.solvers import LUSolver
 
 
 def test_lu_solver_correct():
@@ -16,7 +16,5 @@ def test_lu_solver_correct():
 
 
 def test_lu_solver_matrix_not_array():
-    A = "string"
-
     with pytest.raises(TypeError, match="Argument should be a numpy array!"):
-        solver = LUSolver(A)
+        solver = LUSolver('string')
