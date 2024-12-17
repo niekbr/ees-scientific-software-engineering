@@ -48,3 +48,8 @@ def test_rms_error_contains_minus_inf():
 def test_atleat_one_value():
     with pytest.raises(ValueError, match="Argument numpy array should contain at least one value!"):
         rms(np.array([], dtype=np.float64))
+
+
+def test_rms_error_contains_nan():
+    with pytest.raises(ValueError, match="Argument array should not contain nan!"):
+        rms(np.array([4.0, np.nan, 8.0]))
