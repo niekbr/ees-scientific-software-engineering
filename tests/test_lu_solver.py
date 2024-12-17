@@ -8,13 +8,9 @@ def correct_matrix():
     return np.array([[2.0, 5.0, 8.0, 7.0], [5.0, 2.0, 2.0, 8.0], [7.0, 5.0, 6.0, 6.0], [5.0, 4.0, 4.0, 8.0]])
 
 
-def correct_vector():
-    return np.array([1.0, 1.0, 1.0, 1.0])
-
-
 def test_lu_solver_correct():
     A = correct_matrix()
-    b = correct_vector()
+    b = np.array([1.0, 1.0, 1.0, 1.0])
 
     A = correct_matrix()
     solver = LUSolver(A)
