@@ -17,4 +17,4 @@ def test_lu_solver_correct():
 
 def test_lu_solver_matrix_not_array():
     with pytest.raises(TypeError, match="Argument should be a numpy array!"):
-        solver = LUSolver('string')
+        solver = LUSolver("string")
