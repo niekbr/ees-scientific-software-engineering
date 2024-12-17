@@ -23,3 +23,8 @@ def test_rms_from_data():
         data = json.load(f)
     input_array = np.array(data["array"])
     assert np.isclose(rms(input_array), data["expected"])
+
+
+def test_one_dimensional():
+    with pytest.raises(TypeError, match="Argument should be one dimensional array!"):
+        rms(np.array([[4.0, 1.0, 8.0], [2.1, 1.2, 2.2]]))
