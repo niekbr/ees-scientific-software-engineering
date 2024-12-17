@@ -18,6 +18,11 @@ def test_rms_bad_argument():
         rms("string instead of numpy array")
 
 
+def test_rms_error_float():
+    with pytest.raises(TypeError, match="Argument numpy array should contain float64 values!"):
+        rms(np.array(["one", "two", "three"]))
+
+
 def test_rms_from_data():
     with open(DATA_PATH / "test_rms.json") as f:
         data = json.load(f)
