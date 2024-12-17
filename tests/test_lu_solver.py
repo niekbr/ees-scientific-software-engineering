@@ -5,8 +5,8 @@ from ees_scientific_software_engineering.solvers import LUSolver
 
 
 def test_lu_solver_correct():
-    A = np.array([[2, 5, 8, 7], [5, 2, 2, 8], [7, 5, 6, 6], [5, 4, 4, 8]])
-    b = np.array([1, 1, 1, 1])
+    A = np.array([[2.0, 5.0, 8.0, 7.0], [5.0, 2.0, 2.0, 8.0], [7.0, 5.0, 6.0, 6.0], [5.0, 4.0, 4.0, 8.0]])
+    b = np.array([1.0, 1.0, 1.0, 1.0])
 
     solver = LUSolver(A)
 
@@ -22,4 +22,9 @@ def test_lu_solver_matrix_not_array():
 
 def test_lu_solver_matrix_not_square_matrix():
     with pytest.raises(ValueError, match="Argument should be a square matrix!"):
-        solver = LUSolver(np.array([[1, 1, 1], [1, 1, 1]]))
+        solver = LUSolver(np.array([[1.0, 1.0, 1.0], [1.0, 1.0, 1.0]]))
+
+
+def test_lu_solver_matrix_not_float():
+    with pytest.raises(ValueError, match="Argument should contain float64 values!"):
+        solver = LUSolver(np.array([[1, 1], [1, 1]]))

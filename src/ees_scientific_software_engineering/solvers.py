@@ -19,6 +19,9 @@ class LUSolver:
         if input_matrix.shape[0] != input_matrix.shape[1]:
             raise ValueError("Argument should be a square matrix!")
 
+        if input_matrix.dtype != np.float64:
+            raise ValueError("Argument should contain float64 values!")
+
         self._lu, self._piv = scipy.linalg.lu_factor(input_matrix)
 
     def solve(self, b: np.ndarray) -> np.ndarray:
