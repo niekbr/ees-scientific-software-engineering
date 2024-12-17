@@ -43,3 +43,8 @@ def test_rms_error_contains_inf():
 def test_rms_error_contains_minus_inf():
     with pytest.raises(ValueError, match="Argument array should not contain inf!"):
         rms(np.array([4.0, -np.inf, 8.0]))
+
+
+def test_atleat_one_value():
+    with pytest.raises(ValueError, match="Argument numpy array should contain at least one value!"):
+        rms(np.array([], dtype=np.float64))

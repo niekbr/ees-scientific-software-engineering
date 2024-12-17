@@ -22,6 +22,9 @@ def rms(input_array: np.ndarray) -> float:
     if input_array.dtype != np.float64:
         raise TypeError("Argument numpy array should contain float64 values!")
 
+    if len(input_array) == 0:
+        raise ValueError("Argument numpy array should contain at least one value!")
+        
     if np.isinf(input_array).any():
         raise ValueError("Argument array should not contain inf!")
 
