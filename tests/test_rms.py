@@ -34,6 +34,7 @@ def test_one_dimensional():
     with pytest.raises(TypeError, match="Argument should be one dimensional array!"):
         rms(np.array([[4.0, 1.0, 8.0], [2.1, 1.2, 2.2]]))
 
+
 def test_atleat_one_value():
     with pytest.raises(ValueError, match="Argument numpy array should contain at least one value!"):
-        rms(np.array([],dtype=np.float64))
+        rms(np.array([], dtype=np.float64))
