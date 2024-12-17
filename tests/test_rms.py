@@ -18,7 +18,7 @@ def test_rms_bad_argument():
         rms("string instead of numpy array")
 
 
-def test_rms_error_float():
+def test_rms_error_not_float():
     with pytest.raises(TypeError, match="Argument numpy array should contain float64 values!"):
         rms(np.array(["one", "two", "three"]))
 
@@ -30,6 +30,11 @@ def test_rms_from_data():
     assert np.isclose(rms(input_array), data["expected"])
 
 
-def test_one_dimensional():
+def test_rms_error_multi_dimensional():
     with pytest.raises(TypeError, match="Argument should be one dimensional array!"):
         rms(np.array([[4.0, 1.0, 8.0], [2.1, 1.2, 2.2]]))
+
+
+def test_rms_error_contains_inf():
+    with pytest.raises(ValueError, match="Argument array should not contain inf!"):
+        rms(np.array([4.0, np.inf, 8.0]))
