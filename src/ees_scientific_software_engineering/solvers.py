@@ -3,7 +3,7 @@
 import numpy as np
 import scipy
 
-
+# pylint: disable=too-few-public-methods
 class LUSolver:
     """Class to solve Ax=b using matrix factorization"""
 
