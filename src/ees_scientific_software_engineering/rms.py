@@ -22,5 +22,8 @@ def rms(input_array: np.ndarray) -> float:
     if input_array.dtype != np.float64:
         raise TypeError("Argument numpy array should contain float64 values!")
 
+    if len(input_array) == 0:
+        raise ValueError("Argument numpy array should contain at least one value!")
+
     input_array_squared = input_array**2
     return np.sqrt(np.mean(input_array_squared))
