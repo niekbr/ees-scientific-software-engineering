@@ -25,5 +25,8 @@ def rms(input_array: np.ndarray) -> float:
     if len(input_array) == 0:
         raise ValueError("Argument numpy array should contain at least one value!")
 
+    if np.isinf(input_array).any():
+        raise ValueError("Argument array should not contain inf!")
+
     input_array_squared = input_array**2
     return np.sqrt(np.mean(input_array_squared))
