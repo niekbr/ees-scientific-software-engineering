@@ -18,3 +18,8 @@ def test_lu_solver_correct():
 def test_lu_solver_matrix_not_array():
     with pytest.raises(TypeError, match="Argument should be a numpy array!"):
         solver = LUSolver("string")
+
+
+def test_lu_solver_matrix_not_square_matrix():
+    with pytest.raises(ValueError, match="Argument should be a square matrix!"):
+        solver = LUSolver(np.array([[1, 1, 1], [1, 1, 1]]))

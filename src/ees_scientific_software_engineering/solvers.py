@@ -16,6 +16,9 @@ class LUSolver:
         if not isinstance(input_matrix, np.ndarray):
             raise TypeError("Argument should be a numpy array!")
 
+        if input_matrix.shape[0] != input_matrix.shape[1]:
+            raise ValueError("Argument should be a square matrix!")
+
         self._lu, self._piv = scipy.linalg.lu_factor(input_matrix)
 
     def solve(self, b: np.ndarray) -> np.ndarray:
