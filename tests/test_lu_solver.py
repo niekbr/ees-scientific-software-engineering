@@ -1,7 +1,10 @@
-from ees_scientific_software_engineering.LUSolver import LUSolver
 import numpy as np
+import pytest
 
-def test_lu_solver():
+from ees_scientific_software_engineering.LUSolver import LUSolver
+
+
+def test_lu_solver_correct():
     A = np.array([[2, 5, 8, 7], [5, 2, 2, 8], [7, 5, 6, 6], [5, 4, 4, 8]])
     b = np.array([1, 1, 1, 1])
 
@@ -10,3 +13,10 @@ def test_lu_solver():
     x = solver.solve(b)
 
     np.allclose(A @ x - b, np.zeros((4,)))  # A == x - b (or close)
+
+
+def test_lu_solver_matrix_not_array():
+    A = "string"
+
+    with pytest.raises(TypeError, match="Argument should be a numpy array!"):
+        solver = LUSolver(A)
