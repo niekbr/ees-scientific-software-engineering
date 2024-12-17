@@ -16,6 +16,9 @@ def rms(input_array: np.ndarray) -> float:
     if not isinstance(input_array, np.ndarray):
         raise TypeError("Argument should be a numpy array!")
 
+    if len(input_array.shape) != 1:
+        raise TypeError("Argument should be one dimensional array!")
+
     if input_array.dtype != np.float64:
         raise TypeError("Argument numpy array should contain float64 values!")
 
