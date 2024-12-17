@@ -5,6 +5,14 @@ import numpy as np
 
 
 def rms(input_array: np.ndarray) -> float:
+    """calculating rms
+
+    Args:
+        input_array: numpy array containing floats
+
+    Returns:
+        rms of numbers in array
+    """
     if not isinstance(input_array, np.ndarray):
         raise TypeError("Argument should be a numpy array!")
 
