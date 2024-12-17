@@ -7,6 +7,6 @@ def test_lu_solver():
 
     solver = LUSolver(A)
 
-    x = LUSolver.solve(b)
+    x = solver.solve(b)
 
     np.allclose(A @ x - b, np.zeros((4,)))  # A == x - b (or close)
