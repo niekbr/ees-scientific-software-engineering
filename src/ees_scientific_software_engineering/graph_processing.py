@@ -46,6 +46,7 @@ class GraphCycleError(Exception):
         Exception: more detailed description
     """
 
+
 class EdgeAlreadyDisabledError(Exception):
     """Exception
 
@@ -58,6 +59,7 @@ class GraphProcessor:
     """
     A Graph Processor to check the graph validity, find downstream vertices and find alternative edges
     """
+
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(
         self,
