@@ -70,7 +70,7 @@ class GraphProcessor:
         edge_vertex_ids_all = edge_vertex_ids_1 + edge_vertex_ids_2
         x = set(edge_vertex_ids_all)
         if not set(edge_vertex_ids_all).issubset(vertex_ids):
-            raise IDNotFoundError("one of values in edge_vertex_id_pairs not found in vertex_ids")
+            raise IDNotFoundError("One of values in edge_vertex_id_pairs not found in vertex_ids")
 
         if len(edge_ids) != len(edge_enabled):
             raise InputLengthDoesNotMatchError("edge_ids should be the same length as edge_enabled")
