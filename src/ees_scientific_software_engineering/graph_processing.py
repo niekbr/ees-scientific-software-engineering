@@ -8,34 +8,57 @@ import networkx as nx
 
 
 class IDNotFoundError(Exception):
-    pass
+    """Exception
+
+    Args:
+        Exception: more detailed description
+    """
 
 
 class InputLengthDoesNotMatchError(Exception):
-    pass
+    """Exception
+
+    Args:
+        Exception: more detailed description
+    """
 
 
 class IDNotUniqueError(Exception):
-    pass
+    """Exception
+
+    Args:
+        Exception: more detailed description
+    """
 
 
 class GraphNotFullyConnectedError(Exception):
-    pass
+    """Exception
+
+    Args:
+        Exception: more detailed description
+    """
 
 
 class GraphCycleError(Exception):
-    pass
+    """Exception
 
+    Args:
+        Exception: more detailed description
+    """
 
 class EdgeAlreadyDisabledError(Exception):
-    pass
+    """Exception
+
+    Args:
+        Exception: more detailed description
+    """
 
 
 class GraphProcessor:
     """
     A Graph Processor to check the graph validity, find downstream vertices and find alternative edges
     """
-
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(
         self,
         vertex_ids: List[int],
@@ -68,7 +91,6 @@ class GraphProcessor:
 
         edge_vertex_ids_1, edge_vertex_ids_2 = zip(*edge_vertex_id_pairs)
         edge_vertex_ids_all = edge_vertex_ids_1 + edge_vertex_ids_2
-        x = set(edge_vertex_ids_all)
         if not set(edge_vertex_ids_all).issubset(vertex_ids):
             raise IDNotFoundError("One of values in edge_vertex_id_pairs not found in vertex_ids")
 
@@ -78,22 +100,22 @@ class GraphProcessor:
         if source_vertex_id not in vertex_ids:
             raise IDNotFoundError("source_vertex_id not found in vertex_ids")
 
-        G = nx.Graph()
-        G.add_nodes_from(vertex_ids)
+        network = nx.Graph()
+        network.add_nodes_from(vertex_ids)
 
         for i, vertex_pair in enumerate(edge_vertex_id_pairs):
             if not edge_enabled[i]:
                 continue
 
-            G.add_edge(vertex_pair[0], vertex_pair[1], id=edge_ids[i])
+            network.add_edge(vertex_pair[0], vertex_pair[1], id=edge_ids[i])
 
-        if not nx.is_connected(G):
+        if not nx.is_connected(network):
             raise GraphNotFullyConnectedError()
 
-        if len(list(nx.simple_cycles(G))) > 0:
+        if len(list(nx.simple_cycles(network))) > 0:
             raise GraphCycleError()
 
-        self._G = G
+        self._network = network
 
         self._edge_ids = edge_ids
         self._edge_enabled = edge_enabled
@@ -141,14 +163,14 @@ class GraphProcessor:
 
         vertices = self._edge_vertex_id_pairs[i]
 
-        path = nx.shortest_path(self._G, self._source_vertex_id, vertices[1])
+        path = nx.shortest_path(self._network, self._source_vertex_id, vertices[1])
 
         downstream_vertex = vertices[1] if vertices[0] in path else vertices[0]
 
-        G_sub = self._G.copy()
-        G_sub.remove_edge(vertices[0], vertices[1])
+        network_sub = self._network.copy()
+        network_sub.remove_edge(vertices[0], vertices[1])
 
-        return sorted(nx.descendants(G_sub, downstream_vertex) | {downstream_vertex})
+        return sorted(nx.descendants(network_sub, downstream_vertex) | {downstream_vertex})
 
     def find_alternative_edges(self, disabled_edge_id: int) -> List[int]:
         """
@@ -192,22 +214,22 @@ class GraphProcessor:
         if not self._edge_enabled[i]:
             raise EdgeAlreadyDisabledError
 
-        G = self._G.copy()
+        network = self._network.copy()
 
         vertices = self._edge_vertex_id_pairs[i]
-        G.remove_edge(vertices[0], vertices[1])  # disconnect
+        network.remove_edge(vertices[0], vertices[1])  # disconnect
 
         all_alternatives_i = [i for i, x in enumerate(self._edge_enabled) if not x]
 
-        good_alternatives = list()
+        good_alternatives = []
         for alternative_i in all_alternatives_i:
             alternative_vertices = self._edge_vertex_id_pairs[alternative_i]
-            G.add_edge(alternative_vertices[0], alternative_vertices[1])
+            network.add_edge(alternative_vertices[0], alternative_vertices[1])
 
-            if nx.is_connected(G) & (len(list(nx.simple_cycles(G))) == 0):
+            if nx.is_connected(network) & (len(list(nx.simple_cycles(network))) == 0):
                 # all connected and not cyclic
                 good_alternatives.append(self._edge_ids[alternative_i])
 
-            G.remove_edge(alternative_vertices[0], alternative_vertices[1])
+            network.remove_edge(alternative_vertices[0], alternative_vertices[1])
 
         return good_alternatives
