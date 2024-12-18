@@ -78,20 +78,27 @@ class GraphProcessor:
         if source_vertex_id not in vertex_ids:
             raise IDNotFoundError("source_vertex_id not found in vertex_ids")
 
-        self.G = nx.Graph()
-        self.G.add_nodes_from(vertex_ids)
+        G = nx.Graph()
+        G.add_nodes_from(vertex_ids)
 
         for i, vertex_pair in enumerate(edge_vertex_id_pairs):
             if not edge_enabled[i]:
                 continue
 
-            self.G.add_edge(vertex_pair[0], vertex_pair[1], id=edge_ids[i])
+            G.add_edge(vertex_pair[0], vertex_pair[1], id=edge_ids[i])
 
-        if not nx.is_connected(self.G):
+        if not nx.is_connected(G):
             raise GraphNotFullyConnectedError()
 
-        if len(list(nx.simple_cycles(self.G))) > 0:
+        if len(list(nx.simple_cycles(G))) > 0:
             raise GraphCycleError()
+
+        self._G = G
+
+        self._edge_ids = edge_ids
+        self._edge_enabled = edge_enabled
+        self._edge_vertex_id_pairs = edge_vertex_id_pairs
+        self._source_vertex_id = source_vertex_id
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
@@ -111,14 +118,37 @@ class GraphProcessor:
         Call find_downstream_vertices with edge_id=1 will return [2, 4]
         Call find_downstream_vertices with edge_id=3 will return [4]
 
+        Steps:
+        1. shortest path from one of the vertices to source vertex
+        2. find downstream vertex of given edge
+        3. disconnect edge
+        4. find nodes left in subnetwork
+
         Args:
             edge_id: edge id to be searched
 
         Returns:
             A list of all downstream vertices.
         """
-        # put your implementation here
-        pass
+
+        if edge_id not in self._edge_ids:
+            raise IDNotFoundError("edge_id not found in edge_ids")
+
+        i = self._edge_ids.index(edge_id)
+
+        if not self._edge_enabled[i]:
+            return []
+
+        vertices = self._edge_vertex_id_pairs[i]
+
+        path = nx.shortest_path(self._G, self._source_vertex_id, vertices[1])
+
+        downstream_vertex = vertices[1] if vertices[0] in path else vertices[0]
+
+        G_sub = self._G.copy()
+        G_sub.remove_edge(vertices[0], vertices[1])
+
+        return sorted(nx.descendants(G_sub, downstream_vertex) | {downstream_vertex})
 
     def find_alternative_edges(self, disabled_edge_id: int) -> List[int]:
         """
@@ -155,5 +185,29 @@ class GraphProcessor:
         Returns:
             A list of alternative edge ids.
         """
-        # put your implementation here
-        pass
+        if disabled_edge_id not in self._edge_ids:
+            raise IDNotFoundError("disabled_edge_id not found in edge_ids")
+
+        i = self._edge_ids.index(disabled_edge_id)
+        if not self._edge_enabled[i]:
+            raise EdgeAlreadyDisabledError
+
+        G = self._G.copy()
+
+        vertices = self._edge_vertex_id_pairs[i]
+        G.remove_edge(vertices[0], vertices[1])  # disconnect
+
+        all_alternatives_i = [i for i, x in enumerate(self._edge_enabled) if not x]
+
+        good_alternatives = list()
+        for alternative_i in all_alternatives_i:
+            alternative_vertices = self._edge_vertex_id_pairs[alternative_i]
+            G.add_edge(alternative_vertices[0], alternative_vertices[1])
+
+            if nx.is_connected(G) & (len(list(nx.simple_cycles(G))) == 0):
+                # all connected and not cyclic
+                good_alternatives.append(self._edge_ids[alternative_i])
+
+            G.remove_edge(alternative_vertices[0], alternative_vertices[1])
+
+        return good_alternatives
