@@ -21,6 +21,7 @@ requires-python = ">=3.12"
 dependencies = [
   'numpy',
   'scipy',
+  'networkx',
 ]
 version = "0.1"
 
