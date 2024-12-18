@@ -17,8 +17,8 @@ def test_constructor_simple_network():
         1,
     )
 
-    assert len(graph_processor._G.nodes) == 5
-    assert len(graph_processor._G.edges) == 4
+    assert len(graph_processor._network.nodes) == 5
+    assert len(graph_processor._network.edges) == 4
 
 
 def test_constructor_unique_vertex():
